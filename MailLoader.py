@@ -7,16 +7,20 @@ from email import message_from_bytes, message
 import json
 
 class ImapConnector:
-    def __init__(self, imap_server, email_address, password=None, save_file=None):
+    def __init__(self, imap_server, save_file=None):
         self.imap_server = imap_server
         self.imap = imaplib.IMAP4_SSL(imap_server)
         self.save_file = save_file
 
+    def connect(self, email_address, password):
         if password:
             self.imap.login(email_address, email_address)
         else:
             # !!!Только для тестирования модуля. В конечном варианте должно быть убрано
             self.imap.login(email_address, getpass.getpass())
+
+    def disconnect(self):
+        self.imap.logout()
 
     @staticmethod
     def get_foldel_name(imap_list, general_name):
@@ -96,9 +100,13 @@ class ImapConnector:
             #indent=0 для читаемости вывода
             json.dump(readed_letters, fout, indent=0)
 
+    def __del__(self):
+        self.disconnect()
         
 # Module testing
 # Not for production using
 if __name__ == '__main__':
-    c = ImapConnector('imap.gmail.com', 'widosmile@gmail.com', password=None, save_file='loaded_letters.txt')
+    c = ImapConnector('imap.gmail.com', save_file='loaded_letters.txt')
+    c.connect('widosmile@gmail.com', password=None)
     c.read_folder('Junk')
+
