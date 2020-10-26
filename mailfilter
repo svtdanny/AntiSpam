@@ -1,0 +1,43 @@
+# WB
+# .mailfilter for maildrop
+
+# Please check if all the paths in PATH are reachable, remove the ones that
+# are not.
+
+PATH="$HOME/bin:/usr/bin:/bin:/usr/local/bin:."
+
+#!You'd better make sure it exists
+#MAILDIR="/var/mail"
+
+DEFAULT="$HOME/Maildir/"
+#ORGMAIL="$DEFAULT"
+#DEFAULT="$MAILDIR/$LOGNAME"
+
+#!imap folder's
+FOLDERDIR="$DEFAULT"
+
+logfile "$HOME/.mailfilter.log"
+
+#LOCKFILE="$HOME/.lockmail"
+#SHELL="/bin/sh"
+
+SPAM="$FOLDERDIR/.SPAM/"
+
+
+#Learning agent add headers
+xfilter "/home/mail/isd/isde_filter/classification_agent.py $LOGNAME cs.msu.su"
+
+#If don`t need these - delete
+if (   ( /AntiSpam-Score: 3./  )    \ 
+     ||( /AntiSpam-Score: 4./  )    \ 
+     ||( /AntiSpam-Score: 5./ )    \ 
+   ) 
+  log "----------------------------------- Spam unsure. "
+  to "$SPAM"       
+}
+
+if (  /^AntiSpam-Result: YES/  )
+{
+  log "----------------------------------- Spam general. "
+  to "$SPAM"         
+}
