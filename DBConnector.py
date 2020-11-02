@@ -21,7 +21,7 @@ class DBConnector():
                 database=db_name
             )
 
-            self.cursor = self.connection.cursor
+            self.cursor = self.connection.cursor()
 
         except Error as e:
             print(f"The error '{e}' occurred")
@@ -29,7 +29,7 @@ class DBConnector():
     def create_table(self, table_name, columns):
         self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name}
                         (id INT AUTO_INCREMENT,
-                        {','.join(columns)},
+                        {' TEXT ,'.join(columns)} TEXT,
                         PRIMARY KEY (id))''')
 
         self.connection.commit()
@@ -76,16 +76,14 @@ class DBConnector():
         query = f"""
             CREATE TABLE IF NOT EXISTS {table_name} (
             id INT AUTO_INCREMENT, 
-            {','.join(columns)}, 
+            {' TEXT ,'.join(columns)} TEXT,
             user_id INTEGER NOT NULL, 
             FOREIGN KEY fk_user_id (user_id) REFERENCES {dep_table}({foreign_key}), 
             PRIMARY KEY (id)
             ) ENGINE = InnoDB
             """
-        
-        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name}
-                        (id INT AUTO_INCREMENT,
-                        {','.join(columns)})''')
+        print(query)
+        self.cursor.execute(query)
 
         self.connection.commit()
 
@@ -101,11 +99,11 @@ def _on_system_startup(address, login, password, db_name):
     connection = mysql.connector.connect(
             host=address,
             user=login,
-            #passwd=password,
+            passwd=password,
             
         )
     
-    query = f"CREATE DATABASE {db_name}"
+    query = f"CREATE DATABASE IF NOT EXISTS {db_name}"
 
     cursor = connection.cursor()
     try:
@@ -126,8 +124,9 @@ def _on_system_startup(address, login, password, db_name):
 
 
 if __name__=='__main__':
-    _on_system_startup('localhost', "root", "", 'BaseDB')
-    db = DBConnector('localhost', "root", "", 'BaseDB')
+    password = input()
+    _on_system_startup('localhost', "root", password, 'BaseDB')
+    db = DBConnector('localhost', "root", password, 'BaseDB')
 
 
     '''
