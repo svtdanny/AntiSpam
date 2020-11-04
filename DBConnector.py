@@ -1,202 +1,103 @@
-import mysql.connector
-from mysql.connector import Error
-
-import pandas as pd
-
-from Table import Table
+import pymongo
 
 class DBConnector():
-    def __init__(self, address, login, password, db_name):
-        self.address = address
-        self.login = login
-        self.db_name = db_name
+    def __init__(self, address, port, db_name):
+        client = pymongo.MongoClient('localhost', 27017)
+        self.connection = client[db_name]
 
-        self.connection = None
-        try:
-
-            self.connection = mysql.connector.connect(
-                host=address,
-                user=login,
-                passwd=password,
-                database=db_name
-            )
-
-            self.cursor = self.connection.cursor()
-
-        except Error as e:
-            print(f"The error '{e}' occurred")
-    
-    def create_table(self, table_name, columns):
-        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name}
-                        (id INT AUTO_INCREMENT,
-                        {' TEXT ,'.join(columns)} TEXT,
-                        PRIMARY KEY (id))''')
-
-        self.connection.commit()
-
-    def read(self, table_name, volume=0):
-        if volume == 0:
-            res_df = pd.read_sql_query(f"select * from {table_name};", self.connection)
+    def find_document(self, collection, elements, multiple=False):
+        """ Function to retrieve single or multiple documents from a provided
+        Collection using a dictionary containing a document's elements.
+        """
+        if multiple:
+            results = self.connection[collection].find(elements)
+            return [r for r in results]
         else:
-            res_df = pd.read_sql_query(f"select * from {table_name} order by id desc limit {volume};", self.connection)
+            return self.connection[collection].find_one(elements)
 
-        return Table(table_name, res_df)
-
-    def write_from_df(self, table, method = 'replace'):
+    def insert_document(self, collection, data, multiple=False):
+        """ Function to insert a document into a collection and
+        return the document's id.
         """
-        :param df:
-        :param table_name:
-        :param method: 'replace'/'append' or 'replace last
-
-        :return:
-        """
-        df = table.get_data()
-        df['id'] = pd.Series([None for i in range(len(df))])
-
-        if method == 'replace last':
-            # Если этот метод будет необходим, стоит попробовать переписать на запрос UPDATE
-            data = self.read(table.get_name()).get_data()
-            len_df = len(df)
-
-            data = data.iloc[:-len_df, :]
-            data = pd.concat([data, df], axis=0)
-            data.to_sql(table.get_name(), self.connection, index=False, if_exists='replace')
+        if multiple:
+            return self.connection[collection].insert_many(data).inserted_id
         else:
-            df.to_sql(table.get_name(), self.connection, index=False, if_exists = method)        
-    
-    def _add_user(self, name):
-        data = self.read('users').get_data()
-        if name not in data['login']:
-            series = pd.Series([None, name])
-            self.write_from_df(Table('users', series), 'append')
+            return self.connection[collection].insert_one(data).inserted_id
+
+    def update_document(self, collection, query_elements, new_values, multiple=False):
+        """ Function to update a single document in a collection.
+        """
+        if multiple:
+            return self.connection[collection].update_many(query_elements, {'$set': new_values},  True)
         else:
-            print('Warning: User already exists!')
+            return self.connection[collection].update_one(query_elements, {'$set': new_values},  True)
 
-    def _create_settings_table(self, table_name, columns, dep_table, foreign_key='id'):
-        query = f"""
-            CREATE TABLE IF NOT EXISTS {table_name} (
-            id INT AUTO_INCREMENT, 
-            {' TEXT ,'.join(columns)} TEXT,
-            user_id INTEGER NOT NULL, 
-            FOREIGN KEY fk_user_id (user_id) REFERENCES {dep_table}({foreign_key}), 
-            PRIMARY KEY (id)
-            ) ENGINE = InnoDB
-            """
-        print(query)
-        self.cursor.execute(query)
-
-        self.connection.commit()
-
-    def _on_startup(self):
-        self.create_table
-
-        settings_cols = ['algo', 'volume', 'alphas', 'thr']
-
-        db._create_settings_table(self, 'BaseSettings', settings_cols, 'users', foreign_key='id')
-
-
-def _on_system_startup(address, login, password, db_name):
-    connection = mysql.connector.connect(
-            host=address,
-            user=login,
-            passwd=password,
-            
-        )
-    
-    query = f"CREATE DATABASE IF NOT EXISTS {db_name}"
-
-    cursor = connection.cursor()
-    try:
-        cursor.execute(query)
-        print("Database created successfully")
-    except Error as e:
-        print(f"The error '{e}' occurred on creating db")
-
-    db = DBConnector(address, login, password, db_name)
-
-    db.create_table('users', ['name'])
-
-    settings_cols = ['algo', 'volume', 'alphas', 'thr']
-    db._create_settings_table('BaseSettings', settings_cols, 'users', foreign_key='id')
-
-    dictionary_cols = ['lexem', 'x_1', 'x_2', 'x_3']
-    db.create_table('BaseDictionary', dictionary_cols)
-
-
-if __name__=='__main__':
-    password = input()
-    _on_system_startup('localhost', "root", password, 'BaseDB')
-    db = DBConnector('localhost', "root", password, 'BaseDB')
-
-
-    '''
-    if FIRST_TEST:
-        connection = create_connection("localhost", "root", "")
-
-        create_database_query = "CREATE DATABASE sm_app"
-        create_database(connection, create_database_query)
-    
-    connection = create_connection("localhost", "root", "", "Settings")
-
-    create_users_table = """
-        CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT, 
-        name TEXT NOT NULL, 
-        age INT, 
-        gender TEXT, 
-        nationality TEXT, 
-        PRIMARY KEY (id)
-        ) ENGINE = InnoDB
+    def delete_document(self, collection, query, multiple=False):
+        """ Function to delete a single document from a collection.
         """
-    execute_query(connection, create_users_table)
+        if multiple:
+            return self.connection[collection].delete_many(query)
+        else:
+            return self.connection[collection].delete_one(query)
 
-    create_posts_table = """
-        CREATE TABLE IF NOT EXISTS posts (
-        id INT AUTO_INCREMENT, 
-        title TEXT NOT NULL, 
-        description TEXT NOT NULL, 
-        user_id INTEGER NOT NULL, 
-        FOREIGN KEY fk_user_id (user_id) REFERENCES users(id), 
-        PRIMARY KEY (id)
-        ) ENGINE = InnoDB
+    def write_from_df(self, collection, df, method = 'replace'):
         """
-    execute_query(connection, create_posts_table)
+        method - 'replace'/'insert'
+        """
+        if method == 'replace':
+            self.delete_document(collection, {}, multiple=True)
+        for row in df.values:
+            doc = dict(zip(df.columns, row))
+            self.insert_document(collection, doc)
 
-    ###
+    def get_settings(self, login):
+        return self.find_document('Settings', {'login':login})
+    
+    def set_settings(self, login, settings):
+        return self.update_document('Settings', {'login':login}, settings)
+    
+    def read_as_df(self, collection):
+        res = self.find_document(collection, {}, multiple=True)
+        res = pd.DataFrame(res)
+        if len(res) != 0:
+            res.drop(['_id'], axis=1, inplace=True)
+        else:
+            print('data is empty!')
+        return res
 
-    sql = "INSERT INTO likes ( user_id, post_id ) VALUES ( %s, %s )"
-    val = [(4, 5), (3, 4)]
+db = DBConnector('localhost', 27017, 'BaseDB')
 
-    cursor = connection.cursor()
-    cursor.executemany(sql, val)
-    connection.commit()
+## Check settings working peoperly:
+res = db.set_settings('root', {'login':'root', 'volume':2, 'set1':'enable'})
+print(res)
 
-    select_users = "SELECT * FROM users"
-    users = execute_read_query(connection, select_users)
+res = db.get_settings('root')
+print(res)
 
-    for user in users:
-        print(user)
+res = db.set_settings('root', {'login':'root', 'volume':22, 'set1':'disable'})
+print(res)
 
+res = db.get_settings('root')
+print(res)
 
-    ###
+#check write from df works fine
+import pandas as pd
+df = pd.read_csv('./breast-cancer.csv')
+print(df)
 
-    update_post_description = """
-    UPDATE
-    posts
-    SET
-    description = "The weather has become pleasant now"
-    WHERE
-    id = 2
-    """
+db.write_from_df('TestDataset', df)
+#res = db.find_document('TestDataset', {}, True)
+res = db.read_as_df('TestDataset')
+print(res)
 
-    execute_query(connection,  update_post_description)
+#Delete testing data
+res = db.delete_document('Settings', {'login':'root'}, multiple=True)
+print(res)
+res = db.delete_document('TestDataset', {}, multiple=True)
+print(res)
 
-    ###
-    delete_comment = "DELETE FROM comments WHERE id = 5"
-    execute_query(connection, delete_comment)
-    ###
-    def create_table(self, table_name, columns):
-    self.cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table_name}
-                    ({','.join(columns)})""")
-
-    '''
+#Check if deleted and undefined behavior with 
+res = db.get_settings('root')
+print(res)
+res = db.read_as_df('TestDataset')
+print(res)
