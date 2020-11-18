@@ -42,7 +42,7 @@
                                     Remember me
                                 </base-checkbox>
                                 <div class="text-center">
-                                    <base-button type="primary" class="my-4">Sign In</base-button>
+                                    <base-button tag="a" href="#/profile" type="primary" class="my-4">Sign In</base-button>
                                 </div>
                             </form>
                         </template>

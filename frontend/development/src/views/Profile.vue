@@ -11,13 +11,7 @@
                         <template slot="title">
                             <i class="ni ni-cloud-upload-96 mr-2"></i>Train
                         </template>
-
-                                <div class="text-center">
-                                    <base-button type="primary" class="my-4">Train New</base-button>
-                                    <base-button type="primary" class="my-4">Train Up</base-button>
-               
-                                    <base-button type="secondary" class="my-8">Disable System</base-button>
-                                </div>
+                        <LearningTab></LearningTab>
                     </tab-pane>
 
                     <tab-pane key="tab2">
@@ -25,15 +19,7 @@
                             <i class="ni ni-bell-55 mr-2"></i>Learning settings
                         </template>
 
-                            <div class="row mt-3">
-                                
-                                    <p class='h6'>Use predifined model:</p>
-                      
-                                    <base-checkbox v-model="checkboxes.checked">
-                                    <p></p>
-                                    </base-checkbox>
-                             
-                            </div>
+                        <LearningSettingsTab></LearningSettingsTab>
                     </tab-pane>
 
                     <tab-pane key="tab3">
@@ -41,23 +27,14 @@
                             <i class="ni ni-calendar-grid-58 mr-2"></i>Classification settings
                         </template>
 
-                        <p class="description">Raw denim you probably haven't heard of them jean shorts
-                            Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache
-                            cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
-                            keffiyeh dreamcatcher synth.</p>
+                        <ClassificationSettingsTab></ClassificationSettingsTab>
                     </tab-pane>
 
                     <tab-pane key="tab4">
                         <template slot="title">
                             <i class="ni ni-cloud-upload-96 mr-2"></i>White and Black lists
                         </template>
-
-                        <p class="description">Raw denim you probably haven't heard of them jean shorts
-                            Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache
-                            cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
-                            keffiyeh dreamcatcher synth.</p>
-                        <p class="description">Raw denim you probably haven't heard of them jean shorts
-                            Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse.</p>
+                        <BlackWhiteListTab></BlackWhiteListTab>
                     </tab-pane>
                 </card>
             </tabs>
@@ -157,21 +134,25 @@
 import Tabs from "@/components/Tabs/Tabs.vue";
 import TabPane from "@/components/Tabs/TabPane.vue";
 
+
+import LearningTab from "./ProfileTabs/LearningTab";
+import LearningSettingsTab from "./ProfileTabs/LearningSettingsTab";
+import ClassificationSettingsTab from "./ProfileTabs/ClassificationSettingsTab";
+import BlackWhiteListTab from "./ProfileTabs/BlackWhiteListTab";
+
+
 export default {
     components: {
         Tabs,
-        TabPane
+        TabPane,
+        
+
+        LearningTab,
+        LearningSettingsTab,
+        ClassificationSettingsTab,
+        BlackWhiteListTab
     },
-data() {
-    return {
-      checkboxes: {
-        unchecked: false,
-        checked: true,
-        uncheckedDisabled: false,
-        checkedDisabled: true
-      },
-    }
-}
+
 };
 </script>
 <style>
