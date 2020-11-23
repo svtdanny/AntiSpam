@@ -24,8 +24,8 @@ export default new Router({
     },
 
     {
-      path: "/registration",
-      name: "registration",
+      path: "/register",
+      name: "register",
       components: {
         default: Register,
         footer: Footer
@@ -51,7 +51,7 @@ export default new Router({
 
     {
       path: '/Components',
-      name:'hero',
+      name:'components',
       components: {
         default: Components,
       }

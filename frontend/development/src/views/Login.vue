@@ -27,22 +27,27 @@
                             <div class="text-center text-muted mb-4">
                                 <small>CMC MSU AntiSpam</small>
                             </div>
-                            <form role="form">
+                            <p v-if="incorrectAuth">Incorrect username or password entered {{a}}</p>
+                            <form v-on:submit.prevent="login">
                                 <base-input alternative
                                             class="mb-3"
                                             placeholder="Email"
-                                            addon-left-icon="ni ni-email-83">
+                                            addon-left-icon="ni ni-email-83"
+                                            name="username"
+                                            v-model="username">
                                 </base-input>
                                 <base-input alternative
                                             type="password"
                                             placeholder="Password"
-                                            addon-left-icon="ni ni-lock-circle-open">
+                                            addon-left-icon="ni ni-lock-circle-open"
+                                            name="password"
+                                            v-model="password">
                                 </base-input>
                                 <base-checkbox>
                                     Remember me
                                 </base-checkbox>
                                 <div class="text-center">
-                                    <base-button tag="a" href="#/profile" type="primary" class="my-4">Sign In</base-button>
+                                    <base-button native-type="submit"  type="primary" class="my-4">Sign In</base-button>
                                 </div>
                             </form>
                         </template>
@@ -64,8 +69,38 @@
         </div>
     </section>
 </template>
+
 <script>
-export default {};
+  export default {
+    name: 'login',
+    data () {
+      return {
+        username: '',
+        password: '',
+        a:'',
+        incorrectAuth: false
+      }
+    },
+    methods: {
+        login () { 
+            this.$store.dispatch('autentification/userLogin', {
+            username: this.username,
+            password: this.password
+            })
+            .then(() => {
+            this.$router.push({ name: 'profile' })
+            })
+            .catch(err => {
+            this.a = err
+            console.log(err)
+            this.incorrectAuth = true
+            
+            })
+            }
+        }
+    
+  }
 </script>
+
 <style>
 </style>
