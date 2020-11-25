@@ -2,24 +2,21 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { getAPI } from './axios-api';
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
-    modules: {
-        autentification: {
-            namespaced: true,
-
+    plugins: [createPersistedState()],
             state: {
                 accessToken: null,
                 refreshToken: null,
                 APIData: ''
             },
             mutations: {
-                updateStorage (state, { access, refresh }) {
-                state.accessToken = access
-                state.refreshToken = refresh
+                updateStorage (state, { access, token }) {
+                state.accessToken = token
                 },
-                destroyToken (state) {s
+                destroyToken (state) {
                 state.accessToken = null
                 state.refreshToken = null
                 }
@@ -36,13 +33,15 @@ export default new Vuex.Store({
                 }
                 },
                 userLogin (context, usercredentials) {
+                   
                 return new Promise((resolve, reject) => {
-                    getAPI.post('/api-token/', {
+                    getAPI.post('/rest-auth/login/', {
+                        headers: {},
                     username: usercredentials.username,
                     password: usercredentials.password
                     })
                     .then(response => {
-                        context.commit('updateStorage', { access: response.data.access, refresh: response.data.refresh }) 
+                        context.commit('updateStorage', { token: response.data.key}) 
                         resolve()
                     })
                     .catch(err => {
@@ -51,36 +50,4 @@ export default new Vuex.Store({
                 })
                 }
             }
-        },
-
-        LearnSets: {
-            namespaced: true,
-
-            state: {
-                VolumeInbox: 5,
-                VolumeSpam: 5
-            },
-            mutations: {
-                updateStorage (state, {VolumeInbox, VolumeSpam}) {
-                state.VolumeInbox = VolumeInbox
-                state.VolumeSpam = VolumeSpam
-                }
-            },
-            actions: {
-                getData (context) {
-                return new Promise((resolve, reject) => {
-                    getAPI.get('profile/get/')
-                    .then(response => {
-                        context.commit('updateStorage', { VolumeInbox: response.data.VolumeInbox, VolumeSpam: response.data.VolumeSpam}) 
-                        resolve()
-                    })
-                    .catch(err => {
-                        reject(err)
-                    })
-                })
-                }
-            }
-        }
-
-    }
     })

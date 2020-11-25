@@ -83,7 +83,7 @@
     },
     methods: {
         login () { 
-            this.$store.dispatch('autentification/userLogin', {
+            this.$store.dispatch('userLogin', {
             username: this.username,
             password: this.password
             })

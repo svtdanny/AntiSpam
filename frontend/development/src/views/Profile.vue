@@ -136,7 +136,7 @@ import TabPane from "@/components/Tabs/TabPane.vue";
 
 
 import LearningTab from "./ProfileTabs/LearningTab";
-import LearningSettingsTab from "./ProfileTabs/LearningSettingsTab";
+import LearningSettingsTab, {LearnSets} from "./ProfileTabs/LearningSettingsTab";
 import ClassificationSettingsTab from "./ProfileTabs/ClassificationSettingsTab";
 import BlackWhiteListTab from "./ProfileTabs/BlackWhiteListTab";
 
