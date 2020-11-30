@@ -1,89 +1,87 @@
 <template>
-    <div class="col">
+  <div class="col">
     <div class="row mt-3">
-        
-            <p class='h6'>Use predifined model: {{VolumeSpam}}</p>
+      <p class="h6">Use predifined model:</p>
 
-            <base-checkbox v-model="checkboxes.checked">
-            <p></p>
-            </base-checkbox>
+      <base-checkbox v-model="UsePredefinedModel">
+        <p></p>
+      </base-checkbox>
     </div>
     <form v-on:submit.prevent="setSettings">
-    <div class="row">
-            <p class='h6'>Train max volume Inbox:</p>
-    </div>
-    <div class="row">
-            <base-input placeholder="1..2000" v-model="VolumeInbox">
-            </base-input>      
-    </div>
+      <div class="row">
+        <p class="h6">Train max volume Inbox:</p>
+      </div>
+      <div class="row">
+        <base-input value='sd' v-model="VolumeInbox"> </base-input>
+      </div>
 
-    <div class="row">
-            <p class='h6'>Train max volume Spam:</p>
-    </div>
-    <div class="row">
-            <base-input placeholder="1..2000" v-model="VolumeSpam">
-            </base-input>      
-    </div>
+      <div class="row">
+        <p class="h6">Train max volume Spam:</p>
+      </div>
+      <div class="row">
+        <base-input placeholder="this.VolumeSpam" v-model="VolumeSpam"> </base-input>
+      </div>
 
-    <div class="row">
-        <base-button native-type="submit" type="primary" class="my-3" size=sm >Save</base-button>
-        <base-button tag="a" href="#/" type="secondary" class="my-3" size=sm>Close</base-button>
-    </div>
+      <div class="row">
+        <base-button native-type="submit" type="primary" class="my-3" size="sm"
+          >Save</base-button
+        >
+        <base-button tag="a" href="#/" type="secondary" class="my-3" size="sm"
+          >Close</base-button
+        >
+      </div>
     </form>
-
-    </div>
+  </div>
 </template>
 
 <script>
-import { getAPI } from '../../axios-api'
-import { mapState } from 'vuex'
-import axios from 'axios'
+import { getAPI } from "../../axios-api";
+import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
-    data() {
+  data() {
     return {
-        VolumeSpam: '',
-        VolumeInbox: '',
+      VolumeSpam: "",
+      VolumeInbox: "",
+      UsePredefinedModel: true,
 
-      checkboxes: {
-        unchecked: false,
-        checked: true,
-        uncheckedDisabled: false,
-        checkedDisabled: true
+    };
+  },
+
+  created() {
+    axios({
+      method: "GET",
+      url: "http://127.0.0.1:8000/profile/learning_sets/",
+      headers: {
+        Authorization: `Token ${this.$store.state.accessToken}`,
       },
-    }
-    },
-    
-    created () {
-        getAPI.get('/profile/LearnSets/', { headers: { Authorization: `Token ${this.$store.state.accessToken}` , 'Content-Type': 'application/json;charset=UTF-8',
-      "Access-Control-Allow-Origin": "*"}})
-          .then(response => {
-            this.VolumeInbox = response.VolumeInbox
-            this.VolumeSpam = response.VolumeSpam
-          })
-          .catch(err => {
-            console.log(err)
-          })
-    },
+    })
+      .then((response) => {
+        this.VolumeInbox = response.data.VolumeInbox;
+        this.VolumeSpam = response.data.VolumeSpam;
+        this.UsePredefinedModel = response.data.UsePredefinedModel;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
 
-    methods: {
-        setSettings () { 
-                axios({
-                method: 'POST',
-                url: 'http://127.0.0.1:8000/api/v1/movies/',
-                headers: {
-                Authorization: `Token ${this.$store.state.accessToken}`
-                },
-                data: {title: "Ant Man and The Wasp", genre: "Action", year: 2018}
-        }).catch(err => {
-                console.log(err)    
-                })
-        }
-        }
-
+  methods: {
+    setSettings() {
+      axios({
+        method: "PUT",
+        url: "http://127.0.0.1:8000/profile/learning_sets/",
+        headers: {
+          Authorization: `Token ${this.$store.state.accessToken}`,
+        },
+        data: { VolumeInbox: this.VolumeInbox, VolumeSpam: this.VolumeSpam , UsePredefinedModel: this.UsePredefinedModel},
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+  },
 };
-
-
 </script>
 <style>
 </style>
