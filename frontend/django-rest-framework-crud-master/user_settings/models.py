@@ -1,4 +1,5 @@
-from django.db import models
+from djongo import models
+from rest_framework import serializers 
 
 # Create your models here.
 class LearningSettings(models.Model):
@@ -19,3 +20,25 @@ class ClassSettings(models.Model):
 
     def __str__(self):
         return str(self.creator) + '_class_sets'
+
+class MailLists(models.Model):
+    _id = models.ObjectIdField()
+    
+    whiteList = models.TextField(null=True, blank=True)
+    blackList = models.TextField(null=True, blank=True)
+
+    creator = models.ForeignKey('auth.User', related_name='user_mail_lists', on_delete=models.CASCADE)
+
+    objects = models.DjongoManager()
+
+    def __str__(self):
+        return str(self.creator) + '_mail_lists'
+    """
+    def insert_mailist(self, index, value):
+        self.mylist.insert(index, value)
+        #self.save()
+    def remove_from_mylist(self, value):
+        self.mylist.remove(value)
+        #self.save()
+    """
+    

@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { getAPI } from "../../axios-api";
 import { mapState } from "vuex";
 import axios from "axios";
 
