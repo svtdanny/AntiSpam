@@ -99,6 +99,8 @@ import axios from "axios";
 import BaseDropdown from "@/components/BaseDropdown.vue";
 import LoaderTXT from "../components/ReaderTXT";
 
+import {API_URL} from "../../axios-api.js";
+
 export default {
   components: {
     BaseDropdown,
@@ -130,7 +132,7 @@ export default {
     getMailLists() {
       axios({
         method: "GET",
-        url: "http://127.0.0.1:8000/profile/mail_lists/",
+        url: API_URL + "/profile/mail_lists/",
         headers: {
           Authorization: `Token ${this.$store.state.accessToken}`,
         },
@@ -153,7 +155,7 @@ export default {
       }
       axios({
         method: "PUT",
-        url: "http://127.0.0.1:8000/profile/mail_lists/",
+        url: API_URL + "/profile/mail_lists/",
         headers: {
           Authorization: `Token ${this.$store.state.accessToken}`,
         },
@@ -173,7 +175,7 @@ export default {
     deleteFromMailLists() {
       axios({
         method: "DELETE",
-        url: "http://127.0.0.1:8000/profile/mail_lists/",
+        url: API_URL + "/profile/mail_lists/",
         headers: {
           Authorization: `Token ${this.$store.state.accessToken}`,
         },

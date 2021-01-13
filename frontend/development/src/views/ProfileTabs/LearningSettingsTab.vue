@@ -38,6 +38,8 @@
 import { mapState } from "vuex";
 import axios from "axios";
 
+import {API_URL} from "../../axios-api.js";
+
 export default {
   data() {
     return {
@@ -51,7 +53,7 @@ export default {
   created() {
     axios({
       method: "GET",
-      url: "http://127.0.0.1:8000/profile/learning_sets/",
+      url: API_URL + "/profile/learning_sets/",
       headers: {
         Authorization: `Token ${this.$store.state.accessToken}`,
       },
@@ -70,7 +72,7 @@ export default {
     setSettings() {
       axios({
         method: "PUT",
-        url: "http://127.0.0.1:8000/profile/learning_sets/",
+        url: API_URL + "/profile/learning_sets/",
         headers: {
           Authorization: `Token ${this.$store.state.accessToken}`,
         },

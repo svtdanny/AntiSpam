@@ -1,6 +1,6 @@
 <template>
-       <section class="section section-shaped section-lg my-0">
-        <div class="shape shape-style-1 bg-gradient-default">
+    <section class="section-hero section-shaped my-0">
+        <div class="shape shape-style-1 shape-primary">
             <span></span>
             <span></span>
             <span></span>
@@ -10,9 +10,6 @@
             <span></span>
             <span></span>
         </div>
-          <br>
-            <br>
-            <br>
         <div class="container pt-lg-md">
             <div class="row justify-content-center">
                 <div class="col-lg-5">
@@ -22,22 +19,21 @@
                           class="border-0">
                         <template>
                             <div class="text-muted text-center mb-3">
-                                <h5>Личный кабинет</h5>
+                                <small>Sign in</small>
                             </div>
 
                         </template>
                         <template>
                             <div class="text-center text-muted mb-4">
-                                <small>Antispam MSU</small>
-                                <br>
+                                <small>CMC MSU AntiSpam</small>
                             </div>
                             <p v-if="incorrectAuth">Incorrect username or password entered {{a}}</p>
                             <form v-on:submit.prevent="login">
                                 <base-input alternative
                                             class="mb-3"
-                                            placeholder="login"
-                                            addon-left-icon="ni ni-circle-08"
-                                            name="login"
+                                            placeholder="Email"
+                                            addon-left-icon="ni ni-email-83"
+                                            name="username"
                                             v-model="username">
                                 </base-input>
                                 <base-input alternative
@@ -47,24 +43,24 @@
                                             name="password"
                                             v-model="password">
                                 </base-input>
-                                <base-checkbox v-show="false">
+                                <base-checkbox>
                                     Remember me
                                 </base-checkbox>
                                 <div class="text-center">
-                                    <base-button native-type="submit"  type="primary" class="my-4">Войти</base-button>
+                                    <base-button native-type="submit"  type="primary" class="my-4">Sign In</base-button>
                                 </div>
                             </form>
                         </template>
                     </card>
                     <div class="row mt-3">
-                        <div class="col-6" >
+                        <div class="col-6">
                             <a href="#" class="text-light">
-                                <small v-show="false">Forgot password?</small>
+                                <small>Forgot password?</small>
                             </a>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="#/registration">
-                                <h6  class="text-light">Создать новый аккаунт</h6>
+                            <a href="#/registration" class="text-light">
+                                <small>Create new account</small>
                             </a>
                         </div>
                     </div>
@@ -95,7 +91,7 @@
             this.$router.push({ name: 'profile' })
             })
             .catch(err => {
-            this.a = err.non_field_errors
+            this.a = err
             console.log(err)
             this.incorrectAuth = true
             

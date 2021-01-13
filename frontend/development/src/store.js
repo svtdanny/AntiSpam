@@ -48,6 +48,25 @@ export default new Vuex.Store({
                         reject(err)
                     })
                 })
-                }
+                },
+                userRegister (context, usercredentials) {
+                   
+                    return new Promise((resolve, reject) => {
+                        getAPI.post('/rest-auth/registration/', {
+                            headers: {},
+                        username: usercredentials.username,
+                        email: usercredentials.email,
+                        password1: usercredentials.password1,
+                        password2: usercredentials.password2,
+                        })
+                        .then(response => {
+                            context.commit('updateStorage', { token: response.data.key}) 
+                            resolve()
+                        })
+                        .catch(err => {
+                            reject(err)
+                        })
+                    })
+                    }
             }
     })

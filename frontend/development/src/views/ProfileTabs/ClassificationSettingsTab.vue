@@ -53,11 +53,13 @@
 <script>
 import axios from "axios";
 
+import {API_URL} from "../../axios-api.js";
+
 export default {
   created() {
     axios({
       method: "GET",
-      url: "http://127.0.0.1:8000/profile/class_sets/",
+      url: API_URL + "/profile/class_sets/",
       headers: {
         Authorization: `Token ${this.$store.state.accessToken}`,
       },
@@ -86,7 +88,7 @@ export default {
 
       axios({
         method: "PUT",
-        url: "http://127.0.0.1:8000/profile/class_sets/",
+        url: API_URL + "/profile/class_sets/",
         headers: {
           Authorization: `Token ${this.$store.state.accessToken}`,
         },

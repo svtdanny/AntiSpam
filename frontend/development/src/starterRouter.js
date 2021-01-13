@@ -2,13 +2,14 @@ import Vue from "vue";
 import Router from "vue-router";
 import Header from "./layout/AppHeader";
 import Footer from "./layout/AppFooter";
-import Login from "./views/Login.vue";
-import Register from "./views/Register.vue";
-import Profile from "./views/Profile.vue";
 
-import Components from "./views/Components.vue"
+const Login = () => import("./views/Login.vue")
+const Register = () => import('./views/Register.vue')
 
-import Hero from "./views/components/Hero.vue";
+const Profile = () => import('./views/Profile.vue')
+
+const Components = () => import('./views/Components.vue')
+const Hero = () => import('./views/components/Hero.vue')
 
 Vue.use(Router);
 
@@ -16,7 +17,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "sign-in",
+      name: "login",
       components: {
         default: Login,
         footer: Footer
@@ -24,8 +25,8 @@ export default new Router({
     },
 
     {
-      path: "/register",
-      name: "register",
+      path: "/registration",
+      name: "registration",
       components: {
         default: Register,
         footer: Footer
@@ -41,21 +42,6 @@ export default new Router({
       }
     },
 
-    {
-      path: '/hero',
-      name:'hero',
-      components: {
-        default: Hero,
-      }
-    },
-
-    {
-      path: '/Components',
-      name:'components',
-      components: {
-        default: Components,
-      }
-    }
 
   ]
 });
