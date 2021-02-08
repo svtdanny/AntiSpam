@@ -14,7 +14,7 @@ class ImapConnector:
 
     def connect(self, email_address, password):
         if password:
-            self.imap.login(email_address, email_address)
+            self.imap.login(email_address, password)
         else:
             # !!!Только для тестирования модуля. В конечном варианте должно быть убрано
             self.imap.login(email_address, getpass.getpass())
@@ -91,7 +91,7 @@ class ImapConnector:
         if self.save_file != None:
             self.save_to_file(readed_letters)
         else:
-            raise Exception('Errror: ', 'No one of saving ways was used! Check parameters for file savings')
+            return readed_letters
 
     def save_to_file(self, readed_letters):
         assert(self.save_file is not None, 'Save directory isn`t specified')
