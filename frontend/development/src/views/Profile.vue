@@ -9,14 +9,14 @@
                 <card shadow slot-scope="{activeTabIndex}">
                     <tab-pane key="tab1">
                         <template slot="title">
-                            <i class="ni ni-cloud-upload-96 mr-2"></i>Train
+                            Train
                         </template>
                         <LearningTab></LearningTab>
                     </tab-pane>
 
                     <tab-pane key="tab2">
                         <template slot="title">
-                            <i class="ni ni-bell-55 mr-2"></i>Learning settings
+                            Learning settings
                         </template>
 
                         <LearningSettingsTab></LearningSettingsTab>
@@ -24,7 +24,7 @@
 
                     <tab-pane key="tab3">
                         <template slot="title">
-                            <i class="ni ni-calendar-grid-58 mr-2"></i>Classification settings
+                            Classification settings
                         </template>
 
                         <ClassificationSettingsTab></ClassificationSettingsTab>
@@ -32,7 +32,7 @@
 
                     <tab-pane key="tab4">
                         <template slot="title">
-                            <i class="ni ni-cloud-upload-96 mr-2"></i>White and Black lists
+                            White and Black lists
                         </template>
                         <BlackWhiteListTab></BlackWhiteListTab>
                     </tab-pane>
