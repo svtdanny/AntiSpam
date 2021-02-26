@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const API_URL = 'http://158.250.19.50:443';
+const API_URL = 'http://api.antispam-msu.site';
 
 var getAPI = axios.create({
     baseURL: API_URL,
