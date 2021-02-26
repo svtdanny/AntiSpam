@@ -1,10 +1,12 @@
 import os
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
+import email
 
 from Classificator import Classificator
 
-import requests 
+import json
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -15,7 +17,7 @@ settings = {
 
 @app.route('/', methods=['GET'])
 def hello():
-    return 'Servise is working! It`s learning agent. CMC MSU Antispam'
+    return 'Servise is working! It`s processor agent. CMC MSU Antispam'
 
 class FitModel(Resource):
     @staticmethod
@@ -45,7 +47,10 @@ class SpamEvaluator(Resource):
     def post():
         data = request.get_json()
 
-        email = data['email']
+        with open('/home/antispam/agents/ProcessorAgent/Output.txt', 'a') as f:
+            f.write(json.dumps(data))
+
+        email_addr = data['email']
         letter = data['letter']
 
         # В документации написано про байтовое представление. Однако через stdin передаются строки (str). 
@@ -53,7 +58,7 @@ class SpamEvaluator(Resource):
         # msg = email.message_from_bytes(letter, _class = email.message.EmailMessage)
         msg = email.message_from_string(letter, _class = email.message.EmailMessage)
 
-        cl = Classificator(email)
+        cl = Classificator(email_addr)
         prep_msg = Classificator.prepare_data(msg)
         result, score = cl.predict(prep_msg)
 

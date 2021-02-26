@@ -24,9 +24,10 @@ class Classificator():
         try:
             self.model = joblib.load('models/'+self.email)
         except:
-            raise Exception('model wasn`t exists yet')
-        
-        result, score = self.model.predict(prep_msg)
+            #raise Exception('model wasn`t exists yet')
+	    pass        
+
+        #result, score = self.model.predict(prep_msg)
 
         return 'NO', 0
         #return result, score

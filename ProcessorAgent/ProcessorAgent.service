@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve ProcessorAgent of msu antispam system
+After=network.target
+
+[Service]
+User=antispam
+Group=www-data
+WorkingDirectory=/home/antispam/agents/ProcessorAgent
+Environment="PATH=/home/antispam/agents/ProcessorAgent/venv/bin"
+ExecStart=gunicorn --bind unix:ProcessorAgent.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
