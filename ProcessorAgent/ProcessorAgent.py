@@ -11,10 +11,6 @@ import json
 app = Flask(__name__)
 api = Api(app)
 
-settings = {
-    'PrepareService':'localhost/prepare'
-}
-
 @app.route('/', methods=['GET'])
 def hello():
     return 'Servise is working! It`s processor agent. CMC MSU Antispam'
@@ -31,8 +27,8 @@ class FitModel(Resource):
         inbox_prep = Classificator.prepare_data(inbox)
         spam_prep = Classificator.prepare_data(spam)
 
-        y_inbox = [1 for el in inbox_prep]
-        y_spam = [0 for el in spam_prep]
+        y_inbox = [-1 for el in inbox_prep]
+        y_spam = [1 for el in spam_prep]
         
         X = inbox_prep + spam_prep
         y = y_inbox + y_spam
@@ -53,13 +49,10 @@ class SpamEvaluator(Resource):
         email_addr = data['email']
         letter = data['letter']
 
-        # В документации написано про байтовое представление. Однако через stdin передаются строки (str). 
-        # Быть осторожным!
-        # msg = email.message_from_bytes(letter, _class = email.message.EmailMessage)
-        msg = email.message_from_string(letter, _class = email.message.EmailMessage)
+
 
         cl = Classificator(email_addr)
-        prep_msg = Classificator.prepare_data(msg)
+        prep_msg = Classificator.prepare_data([letter])
         result, score = cl.predict(prep_msg)
 
         msg['AntiSpam-Result'] = str(result)
