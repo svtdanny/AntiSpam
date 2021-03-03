@@ -28,7 +28,7 @@ class ImapConnector:
         
         for i in imap_list[1]:
             l = i.decode().split(' "/" ')
-            if general_name in l[0]:
+            if general_name in l[0] or general_name in l[1]:
                 result.append((l[0], l[1]))
                 
         return tuple(result)
@@ -39,6 +39,9 @@ class ImapConnector:
         # Это не мешает обойти систему послав очень длинную заглушку. Но это маловероятно
         body_len = 0
         
+	#Возможен случай, когда сообщение не будет содержать полезных значений
+        body = None
+
         if msg.is_multipart():
             for part in msg.walk():
                 ctype = part.get_content_type()
@@ -53,10 +56,13 @@ class ImapConnector:
             # может быть только вложение
         else:
             body = msg.get_payload(decode=True)
-            
-        return body.decode('utf-8','ignore')
+        
+        if body is not None:
+            return body.decode('utf-8','ignore')
+        else:
+            return ""
 
-    def read_folder(self, name, from_date=None):
+    def read_folder(self, name, n_letters, from_date=None):
         imap_list = self.imap.list(pattern='*')
         folders = ImapConnector.get_foldel_name(imap_list, name)
 
@@ -73,20 +79,13 @@ class ImapConnector:
         post_ids = ids[0].decode().split(' ')
         post_ids = [p_id.encode() for p_id in post_ids]
 
+        post_ids = post_ids[-n_letters:]
+
         readed_letters = []
         for post_id in post_ids:
             status, letter = self.imap.fetch(post_id, '(RFC822)')
 
-            msg = message_from_bytes(letter[0][1], _class = message.EmailMessage)
-            parsed_letter = dict(msg)
-
-            for key in parsed_letter.keys():
-                parsed_letter[key] = str(make_header(decode_header(parsed_letter[key])))
-
-            body = ImapConnector.read_body(msg)
-            parsed_letter['Body'] = body
-
-            readed_letters.append(parsed_letter)
+            readed_letters.append(letter[0][1])
 
         if self.save_file != None:
             self.save_to_file(readed_letters)
@@ -98,15 +97,18 @@ class ImapConnector:
 
         with open(self.save_file, 'w') as fout:
             #indent=0 для читаемости вывода
-            json.dump(readed_letters, fout, indent=0)
+            #json.dump(readed_letters, fout, indent=0)
+            for r in readed_letters:
+                fout.write(r.decode('utf-8'))
 
     def __del__(self):
-        self.disconnect()
-        
+        #self.disconnect()
+        pass
+
 # Module testing
 # Not for production using
 if __name__ == '__main__':
     c = ImapConnector('imap.gmail.com', save_file='loaded_letters.txt')
     c.connect('widosmile@gmail.com', password=None)
-    c.read_folder('Junk')
+    c.read_folder('INBOX', 5)
 
