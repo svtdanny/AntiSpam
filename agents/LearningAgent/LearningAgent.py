@@ -11,7 +11,7 @@ api = Api(app)
 
 settings = {
     'imap_server': 'imap.gmail.com',
-    'ProcessorAgent': 'http://0.0.0.0:5001/fit-model',
+    'ProcessorAgent': 'http://procagent.antispam-msu.site/fit-model',
 }
 
 @app.route('/', methods=['GET'])

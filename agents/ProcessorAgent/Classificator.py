@@ -17,6 +17,7 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 import pymorphy2
 
+nltk.download('stopwords')
 
 class Classificator():
     def __init__(self, email):
@@ -39,15 +40,16 @@ class Classificator():
 
     def fit(self, X, y):
         """
-        X - list of vectors; prepared letters 
+        X - list of vectors; prepared letters
         is_spam - int [-1,1]
         """
         self.vectorizer = TfidfVectorizer(use_idf = False, tokenizer=Classificator.tokenize_and_lemmatize, preprocessor=Classificator.dummy)
         self.model = SVC(probability=True, max_iter=5000) #Уменьшай если работает долго
-        self.selector = SelectKBest(chi2, k=self.n_features)
-        train_X = self.selector.fit_transform(self.vectorizer.fit_transform(X).toarray(), y)
+        train_X = self.vectorizer.fit_transform(X).toarray()
+        self.selector = SelectKBest(chi2, k=min(self.n_features, len(train_X[0])))
+        train_X = self.selector.fit_transform(train_X, y)
         self.model.fit(train_X, y)
-        joblib.dump([self.model, self.vectorizer, self.selector], 'models/'+self.email)
+        joblib.dump([self.model, self.vectorizer, self.selector], '/home/antispam/agents/ProcessorAgent/models/'+self.email)
 
     def predict(self, prep_msg):
         """
