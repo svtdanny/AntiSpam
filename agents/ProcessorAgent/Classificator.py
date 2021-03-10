@@ -17,8 +17,6 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 import pymorphy2
 
-nltk.download('stopwords')
-
 class Classificator():
     def __init__(self, email):
         self.email = email
