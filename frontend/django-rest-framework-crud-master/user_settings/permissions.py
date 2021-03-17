@@ -1,6 +1,6 @@
 from rest_framework import permissions
 from rest_framework.exceptions import PermissionDenied
-
+import rest_framework
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -36,3 +36,8 @@ class IsAuthenticated(permissions.BasePermission):
             return is_it
         else:
             raise PermissionDenied(detail=message)
+
+class AdminAuthenticationPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_superuser

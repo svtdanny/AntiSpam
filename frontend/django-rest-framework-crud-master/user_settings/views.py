@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from .models import LearningSettings, ClassSettings, MailLists
-from .permissions import IsOwner, IsAuthenticated
+from .permissions import IsOwner, IsAuthenticated, AdminAuthenticationPermission
 from .serializers import LearningSettingsSerializer, ClassSettingsSerializer, MailListsSerializer
-
+from django.contrib.auth.models import User
 
 # Create your views here.
 class get_post_learning_sets(ListCreateAPIView):
@@ -133,3 +133,17 @@ class get_post_mail_lists(ListCreateAPIView):
         serializer = MailListsSerializer(lists)
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class _sys_get_mail_lists(ListCreateAPIView):
+    serializer_class = MailListsSerializer
+    permission_classes = (IsAuthenticated, AdminAuthenticationPermission,)
+
+    def get(self, request):
+        username = request.data["username"]
+
+        user = User.objects.get(username=username)
+        lists = MailLists.objects.get(creator = user)
+        
+        serializer = self.serializer_class(lists)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
