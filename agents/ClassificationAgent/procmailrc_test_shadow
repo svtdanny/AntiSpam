@@ -1,0 +1,42 @@
+# Please check if all the paths in PATH are reachable, remove the ones that
+# are not.
+
+PATH=$HOME/bin:/usr/bin:/bin:/usr/local/bin:.
+
+#!You'd better make sure it exists
+#MAILDIR=/var/mail
+
+DEFAULT=$HOME/Maildir/
+ORGMAIL=$DEFAULT
+#DEFAULT=$MAILDIR/$LOGNAME
+
+#!imap folder's
+FOLDERDIR=$DEFAULT
+
+LOGFILE=$HOME/procmail.log
+LOCKFILE=$HOME/.lockmail
+SHELL=/bin/sh
+TIMEOUT=100
+
+:0                      # Shadow Test
+TEST_RESULT=| /usr/bin/python3 /home/antispam/agents/ClassificationAgent/ClassificationAgent.py $LOGNAME cs.msu.su
+
+:0                      # Anything
+ISDE_RESULT=| /home/mail/isd/isde_filter/isde_filter $LOGNAME cs.msu.su
+
+:0                      # extract spam score
+* ISDE_RESULT ?? ^^\/[0-9+.-]+
+{ ISDE_SCORE=$MATCH }
+
+:0                      # extract spam result
+* ISDE_RESULT ?? ^^[0-9+.-]+ \/[A-Z]+
+{ ISDE_MARK=$MATCH }
+
+:0 fhw
+| formail -I "X-ISDE-Score: $ISDE_SCORE" -I "X-ISDE-Result: $ISDE_MARK"
+
+:0
+* ISDE_MARK ?? SPAM
+* ? [ -e $FOLDERDIR/.SPAM ]
+$FOLDERDIR/.SPAM/
+
