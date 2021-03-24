@@ -142,6 +142,14 @@ class Classificator():
             texts.append(Classificator.process_email(decoded_msg))
         return texts
 
+    @staticmethod
+    def json_to_dict(msg):
+        # json letter to dict for returning
+        decoded_msg = email.message_from_string(msg, _class = email.message.EmailMessage)
+
+        return decoded_msg
+    
+
 # Не обязательной умещать все в одном файле, однако он достаточно мал
 if __name__ == "__main__":
     # В документации указано, что письмо подается на стандартный вход (stdin) и отфильтрованное письмо возвращается на stdout

@@ -49,17 +49,21 @@ class SpamEvaluator(Resource):
         email_addr = data['email']
         letter = data['letter']
 
+         cl = Classificator(email_addr)
+        prep_text = Classificator.prepare_data(letter)[0]
+        result, score = cl.predict(prep_text)
 
+        # code if you need to return letter with headers
+        #msg = Classificator.json_to_dict(', '.join(letter))
+        #response = [letter[0]] + ['AntiSpam-Result: ' + result + '\n', 'AntiSpam-score: ' + str(score) + '\n'] + letter[1:]
 
-        cl = Classificator(email_addr)
-        prep_msg = Classificator.prepare_data([letter])
-        result, score = cl.predict(prep_msg)
-
-        msg['AntiSpam-Result'] = str(result)
-        msg['AntiSpam-Score'] = str(score)
-
+        response = {}
+        response['result'] = result
+        response['score'] = score
+        
         # return jsonify({'result': msg.as_bytes()})
-        return jsonify({'result': msg.as_string()})
+        return jsonify(response)
+
 
 api.add_resource(FitModel, '/fit-model')
 api.add_resource(SpamEvaluator, '/classificator')

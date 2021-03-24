@@ -31,9 +31,14 @@ def classify():
         f.write(response.text)
 
 
-    letter_with_headers = response['result']
+    result = response.json()['result']
+    score = letter_with_headers = response.json()['score']
 
-    sys.stdout.write(letter_with_headers)
+    #for item in letter_with_headers:
+    #    sys.stdout.write(item)
+
+    sys.stdout.write(str(score)+ ' ' + result)
 
 
 classify()
+sys.exit(0)

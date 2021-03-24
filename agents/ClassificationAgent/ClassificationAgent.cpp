@@ -5,6 +5,9 @@
 #include <iostream>
 #include <jsoncpp/json/json.h>
 
+// Dependences
+//sudo apt-get install libjsoncpp-dev
+
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -54,7 +57,7 @@ int main(int argc, char* argv[]){
 
         if (jsonReader.parse(readBuffer, jsonData))
             //std::cout << jsonData.get("message", "no such field: message") << std::endl;
-            //std::cout << jsonData.get("result", "no such field: result") << std::endl;
+            std::cout << jsonData.get("score","") << " "<< jsonData.get("result","") << std::endl;
 
         curl_easy_strerror(res);
         curl_easy_cleanup(curl);
