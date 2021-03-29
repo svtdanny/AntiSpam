@@ -41,17 +41,25 @@ class FitModel(Resource):
 class SpamEvaluator(Resource):
     @staticmethod
     def post():
-        data = request.get_json()
+        data = request.get_data().decode('utf-8')
+        data = dict(parse_qsl(data))
+        # change on code below if python agent + json
+        # data = request.get_json()
 
-        with open('/home/antispam/agents/ProcessorAgent/Output.txt', 'a') as f:
+        with open('/home/antispam/agents/ProcessorAgent/Output.txt', 'w') as f:
             f.write(json.dumps(data))
 
         email_addr = data['email']
         letter = data['letter']
 
-         cl = Classificator(email_addr)
-        prep_text = Classificator.prepare_data(letter)[0]
-        result, score = cl.predict(prep_text)
+
+        if (len(letter) != 0):
+            cl = Classificator(email_addr)
+            prep_text = Classificator.prepare_data([letter])[0]
+            result, score = cl.predict(prep_text)
+        else:
+            result, score = "NO", 0
+
 
         # code if you need to return letter with headers
         #msg = Classificator.json_to_dict(', '.join(letter))
@@ -60,7 +68,7 @@ class SpamEvaluator(Resource):
         response = {}
         response['result'] = result
         response['score'] = score
-        
+
         # return jsonify({'result': msg.as_bytes()})
         return jsonify(response)
 
