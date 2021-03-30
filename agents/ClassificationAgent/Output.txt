@@ -1,14 +1,1 @@
-dsivtsovcs.msu.sudsivtsov@cs.msu.suFrom root@localhost  Fri Feb 26 16:09:57 2021
-Return-Path: <root@localhost>
-X-Original-To: dsivtsov@localhost
-Delivered-To: dsivtsov@localhost
-Received: from localhost (localhost [127.0.0.1])
-	by abu2020 (Postfix) with ESMTP id D90E4100C90
-	for <dsivtsov@localhost>; Fri, 26 Feb 2021 16:09:35 +0000 (UTC)
-Subject: asdasdasdasdasd
-Message-Id: <20210226160947.D90E4100C90@abu2020>
-Date: Fri, 26 Feb 2021 16:09:35 +0000 (UTC)
-From: root@localhost
-
-asdasdas
-
+http://procagent.antispam-msu.site/classificator{"email": "d@f", "letter": "asd\nasd\nsad\n"}{'User-Agent': 'python-requests/2.25.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '45', 'Content-Type': 'application/json'}

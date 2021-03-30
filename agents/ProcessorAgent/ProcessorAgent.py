@@ -2,6 +2,8 @@ import os
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 import email
+from urllib.parse import urlparse, parse_qsl
+
 
 from Classificator import Classificator
 
@@ -52,7 +54,7 @@ class SpamEvaluator(Resource):
         email_addr = data['email']
         letter = data['letter']
 
-
+       
         if (len(letter) != 0):
             cl = Classificator(email_addr)
             prep_text = Classificator.prepare_data([letter])[0]
@@ -64,14 +66,13 @@ class SpamEvaluator(Resource):
         # code if you need to return letter with headers
         #msg = Classificator.json_to_dict(', '.join(letter))
         #response = [letter[0]] + ['AntiSpam-Result: ' + result + '\n', 'AntiSpam-score: ' + str(score) + '\n'] + letter[1:]
-
+        
         response = {}
         response['result'] = result
         response['score'] = score
-
+        
         # return jsonify({'result': msg.as_bytes()})
         return jsonify(response)
-
 
 api.add_resource(FitModel, '/fit-model')
 api.add_resource(SpamEvaluator, '/classificator')

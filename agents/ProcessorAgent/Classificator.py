@@ -17,6 +17,8 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 import pymorphy2
 
+nltk.download('stopwords')
+
 class Classificator():
     def __init__(self, email):
         self.email = email
@@ -55,6 +57,8 @@ class Classificator():
         result - str  'YES'/'NO'
         score - float [0...]; Bigger score = bigger probability of spam
         """
+        return "NO", 0
+
         try:
             self.model, self.vectorizer, self.selector = joblib.load('models/'+self.email)
         except:
@@ -148,7 +152,7 @@ class Classificator():
         decoded_msg = email.message_from_string(msg, _class = email.message.EmailMessage)
 
         return decoded_msg
-    
+
 
 # Не обязательной умещать все в одном файле, однако он достаточно мал
 if __name__ == "__main__":

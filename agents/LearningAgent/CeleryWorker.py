@@ -1,9 +1,6 @@
-from celery import Celery 
-
+from celery import shared_task 
 import requests
 from MailLoader import ImapConnector
-
-app = Celery('tasks', backend='rpc://', broker='pyamqp://')
 
 def send_to_processor(email, inbox, spam):
         req_data = {
@@ -16,17 +13,17 @@ def send_to_processor(email, inbox, spam):
 
         return response.status_code
 
-@app.task
+@shared_task(name='delay_load_send_letters')
 def delay_load_send_letters(data, imap_server):
     #Либо надо делать суперюзера, либо вводить пароль снова
     email = data['email']
     password = data['password']
     inbox_volume = data['inbox_volume']
     spam_volume = data['spam_volume']
-
+    
     loader = ImapConnector(imap_server)
     loader.connect(email, password)
-
+   
     inbox = loader.read_folder('INBOX', inbox_volume)
     spam = loader.read_folder('Junk', spam_volume)
 
