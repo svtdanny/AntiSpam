@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=antispam
 Group=www-data
-WorkingDirectory=/home/antispam/agents/LearningAgent
-Environment="PATH=/home/antispam/agents/LearningAgent/venv/bin"
+WorkingDirectory=/home/antispam/AntiSpam/agents/LearningAgent
+Environment="PATH=/home/antispam/AntiSpam/agents/LearningAgent/venv/bin"
 ExecStart=gunicorn --bind unix:LearningAgent.sock -m 007 wsgi:app
 
 [Install]
