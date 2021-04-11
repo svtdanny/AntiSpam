@@ -19,15 +19,25 @@ SHELL=/bin/sh
 TIMEOUT=100
 
 :0                      # Anything
-AS_RESULT=| /home/antispam/agents/ClassificationAgent/cl_script $LOGNAME cs.msu.su
+AS_RESULT=|sh /home/antispam/AntiSpam/agents/ClassificationAgent/test.sh $LOGNAME cs.msu.su
 
 :0                      # extract spam score
 * AS_RESULT ?? ^\/[0-9]+
 { ANTISPAM_SCORE=$MATCH }
 
+:0                      # extract spam score
+* AS_RESULT ?? ^.*:.[A-Z]+.*:\/[0-9]
+{ ANTISPAM_SCORE=$MATCH }
+
+
 :0                      # extract spam result
-* AS_RESULT ?? ^[0-9]+ [^A-Z]*\/[A-Z]+[^A-Z]*
+* AS_RESULT ?? ^[0-9]+ [^A-Z]*\/[A-Z]+
 { ANTISPAM_MARK=$MATCH }
+
+:0                      # extract spam result
+* AS_RESULT ?? ^.*:.\/[A-Z]+
+{ ANTISPAM_MARK=$MATCH }
+
 
 
 :0 fhw
