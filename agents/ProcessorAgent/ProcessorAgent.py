@@ -48,7 +48,7 @@ class SpamEvaluator(Resource):
         # change on code below if python agent + json
         # data = request.get_json()
 
-        with open('/home/antispam/agents/ProcessorAgent/Output.txt', 'w') as f:
+        with open('/home/antispam/AntiSpam/agents/ProcessorAgent/Output.txt', 'w') as f:
             f.write(json.dumps(data))
 
         email_addr = data['email']

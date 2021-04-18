@@ -45,13 +45,13 @@ class CreateModel(Resource):
         inbox = loader.read_folder('INBOX', inbox_volume)
         spam = loader.read_folder('Junk', spam_volume)
 
-        with open('/home/antispam/agents/LearningAgent/loaded_inbox.txt', 'w') as f:
+        with open('/home/antispam/AntiSpam/agents/LearningAgent/loaded_inbox.txt', 'w') as f:
             #indent=0 для читаемости вывода
             #json.dump(inbox, f, indent=0)
             for r in inbox:
                 f.write(r.decode('utf-8'))
 
-        with open('/home/antispam/agents/LearningAgent/loaded_spam.txt', 'w') as f:
+        with open('/home/antispam/AntiSpam/agents/LearningAgent/loaded_spam.txt', 'w') as f:
             #indent=0 для читаемости вывода
             #json.dump(spam, f, indent=0)
             for r in spam:
@@ -60,6 +60,10 @@ class CreateModel(Resource):
         send_to_processor(email, inbox, spam)
 
 api.add_resource(CreateModel, '/create-model')
+
+"""
+curl -X POST -H "Content-Type: application/json" -d '{"email": "sivtsovdt@gmail.com", "password": "", "inbox_volume": 10, "spam_volume": 10}' http://learnagent.antispam-msu.site/create-model
+"""
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

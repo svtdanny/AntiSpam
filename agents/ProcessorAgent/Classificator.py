@@ -49,7 +49,7 @@ class Classificator():
         self.selector = SelectKBest(chi2, k=min(self.n_features, len(train_X[0])))
         train_X = self.selector.fit_transform(train_X, y)
         self.model.fit(train_X, y)
-        joblib.dump([self.model, self.vectorizer, self.selector], '/home/antispam/agents/ProcessorAgent/models/'+self.email)
+        joblib.dump([self.model, self.vectorizer, self.selector], '/home/antispam/AntiSpam/agents/ProcessorAgent/models/'+self.email)
 
     def predict(self, prep_msg):
         """
@@ -57,14 +57,14 @@ class Classificator():
         result - str  'YES'/'NO'
         score - float [0...]; Bigger score = bigger probability of spam
         """
-        return "NO", 0
+        #return "NO", 0
 
         try:
             self.model, self.vectorizer, self.selector = joblib.load('models/'+self.email)
         except:
             raise Exception('model doesn\'t exist yet')
 
-        test_X = self.selector.transform(self.vectorizer.transform(prep_msg).toarray())
+        test_X = self.selector.transform(self.vectorizer.transform([prep_msg]).toarray())
         result = self.model.predict(test_X)[0]
         #!!! Если для спама выдает скор <0.5 то поменяй 1 на 0
         score = self.model.predict_proba(test_X)[0][1] 
