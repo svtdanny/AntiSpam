@@ -108,7 +108,7 @@ class ImapConnector:
 # Module testing
 # Not for production using
 if __name__ == '__main__':
-    c = ImapConnector('jaffar.cs.msu.su', save_file='loaded_letters.txt')
+    c = ImapConnector('jaffar.cs.msu.su:993', save_file='loaded_letters.txt')
     c.connect('isd', password=None)
     c.read_folder('INBOX', 5)
 

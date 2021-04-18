@@ -1,1 +1,1 @@
-{"email": "dsivtsov@cs.msu.su", "letter": "From 41@d.d Sun Apr 18 17:38:22 2021 Return-Path: <41@d.d> X-Original-To: dsivtsov Delivered-To: dsivtsov@antispam-msu.site Received: from localhost (localhost [127.0.0.1]) by abu2020 (Postfix) with SMTP id E606010010F for <dsivtsov>"}
+{"email": "isd@cs.msu.su", "letter": "From 4747@ya.ru Sun Apr 18 21:48:18 2021 Return-Path: <4747@ya.ru> Received: from localhost (localhost [127.0.0.1]) by jaffar.cs.msu.su (8.13.8/8.13.8) with SMTP id 13IIlgrm010759 for isd"}

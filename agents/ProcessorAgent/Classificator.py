@@ -60,7 +60,7 @@ class Classificator():
         #return "NO", 0
 
         try:
-            self.model, self.vectorizer, self.selector = joblib.load('models/'+self.email)
+            self.model, self.vectorizer, self.selector = joblib.load('/home/antispam/AntiSpam/agents/ProcessorAgent/models/'+self.email)
         except:
             raise Exception('model doesn\'t exist yet')
 
