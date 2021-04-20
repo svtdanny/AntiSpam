@@ -19,7 +19,7 @@ SHELL=/bin/sh
 TIMEOUT=100
 
 :0                      # Shadow Test
-TEST_RESULT=| /usr/bin/python3 /home/antispam/agents/ClassificationAgent/ClassificationAgent.py $LOGNAME cs.msu.su
+AS_RESULT=|sh /home/antispam/AntiSpam/agents/ClassificationAgent/test.sh $LOGNAME cs.msu.su
 
 :0                      # Anything
 ISDE_RESULT=| /home/mail/isd/isde_filter/isde_filter $LOGNAME cs.msu.su
@@ -32,8 +32,17 @@ ISDE_RESULT=| /home/mail/isd/isde_filter/isde_filter $LOGNAME cs.msu.su
 * ISDE_RESULT ?? ^^[0-9+.-]+ \/[A-Z]+
 { ISDE_MARK=$MATCH }
 
+:0                      # extract spam score
+* AS_RESULT ?? ^.*:.[A-Z]+.*:\/[0-9]
+{ ANTISPAM_SCORE=$MATCH }
+
+:0                      # extract spam result
+* AS_RESULT ?? ^.*:.\/[A-Z]+
+{ ANTISPAM_MARK=$MATCH }
+
+
 :0 fhw
-| formail -I "X-ISDE-Score: $ISDE_SCORE" -I "X-ISDE-Result: $ISDE_MARK"
+| formail -I "X-ISDE-Score: $ISDE_SCORE" -I "X-ISDE-Result: $ISDE_MARK" -I "X-AS-Score: $ANTISPAM_SCORE" -I "X-AS-Result: $ANTISPAM_MARK"
 
 :0
 * ISDE_MARK ?? SPAM

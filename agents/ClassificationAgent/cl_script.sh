@@ -1,5 +1,7 @@
 #!/bin/bash
 
-myvar=`cat`
+myvar1=`cat`
+myvar2=$(echo "$myvar1"|tr -d \''"')
 
-eval "curl -X POST  -d 'email="$1"@"$2"\&letter="$myvar"' http://procagent.antispam-msu.site/classificator"
+echo $myvar2 >> r.txt
+eval "curl -X POST  -d 'email="$1"@"$2"\&letter="$myvar2"' http://procagent.antispam-msu.site/classificator"
