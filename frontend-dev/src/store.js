@@ -1,4 +1,3 @@
- 
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { getAPI } from './axios-api';
@@ -8,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     plugins: [createPersistedState()],
             state: {
+                username:'',
                 accessToken: null,
                 refreshToken: null,
                 APIData: ''
@@ -16,6 +16,11 @@ export default new Vuex.Store({
                 updateStorage (state, { access, token }) {
                 state.accessToken = token
                 },
+
+                updateUsername (state, { access, username }) {
+                    state.username = username
+                    },
+
                 destroyToken (state) {
                 state.accessToken = null
                 state.refreshToken = null
@@ -24,6 +29,9 @@ export default new Vuex.Store({
             getters: {
                 loggedIn (state) {
                 return state.accessToken != null
+                },
+                username (state){
+                    return state.username;
                 }
             },
             actions: {
@@ -42,6 +50,7 @@ export default new Vuex.Store({
                     })
                     .then(response => {
                         context.commit('updateStorage', { token: response.data.key}) 
+                        context.commit('updateUsername', {username: response.data.user.username})
                         resolve()
                     })
                     .catch(err => {
@@ -49,6 +58,7 @@ export default new Vuex.Store({
                     })
                 })
                 },
+
                 userRegister (context, usercredentials) {
                    
                     return new Promise((resolve, reject) => {
