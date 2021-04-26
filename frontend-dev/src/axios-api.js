@@ -1,7 +1,7 @@
-
 import axios from 'axios'
 
-const API_URL = 'http://api.antispam-msu.site';
+//const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'http://api.antispam-msu.site'
 const LEARN_URL = 'http://learnagent.antispam-msu.site';
 
 var getAPI = axios.create({
