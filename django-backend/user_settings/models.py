@@ -41,4 +41,17 @@ class MailLists(models.Model):
         self.mylist.remove(value)
         #self.save()
     """
+
+class LastLearn(models.Model):
+    lastLearn = models.CharField(max_length=30)
+    totalTime = models.CharField(max_length=30)
+
+    VolumeInbox = models.IntegerField()
+    VolumeSpam = models.IntegerField()
+
+
+    creator = models.ForeignKey('auth.User', related_name='user_lastlearn', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.creator) + '_lastlearn'
     

@@ -1,23 +1,23 @@
 self.__precacheManifest = [
   {
-    "revision": "3e2be5d70ac80fc1ef49",
+    "revision": "0cd5e466a56223822dad",
     "url": "/css/app.7b4725de.css"
   },
   {
-    "revision": "3e2be5d70ac80fc1ef49",
-    "url": "/js/app.2c585316.js"
+    "revision": "0cd5e466a56223822dad",
+    "url": "/js/app.6c1235ca.js"
   },
   {
     "revision": "c2d526533d6e4cbf66b3",
     "url": "/js/chunk-2442ce72.a6f8469e.js"
   },
   {
-    "revision": "e52874cafb7131ca8e9e",
+    "revision": "f162ca4d03183d433f3c",
     "url": "/css/chunk-3a0b24ee.7b022d72.css"
   },
   {
-    "revision": "e52874cafb7131ca8e9e",
-    "url": "/js/chunk-3a0b24ee.9b0cece2.js"
+    "revision": "f162ca4d03183d433f3c",
+    "url": "/js/chunk-3a0b24ee.ace69db3.js"
   },
   {
     "revision": "7420c9f7014f61772bc0",
@@ -44,10 +44,6 @@ self.__precacheManifest = [
     "url": "/fonts/nucleo-icons.42643978.woff2"
   },
   {
-    "revision": "0b8a30b10cbe7708d5f3a4b007c1d665",
-    "url": "/img/nucleo-icons.0b8a30b1.svg"
-  },
-  {
     "revision": "2569aaea6eaaf8cd210db7f2fa016743",
     "url": "/fonts/nucleo-icons.2569aaea.woff"
   },
@@ -56,12 +52,16 @@ self.__precacheManifest = [
     "url": "/fonts/nucleo-icons.f82ec6ba.ttf"
   },
   {
-    "revision": "af7ae505a9eed503f8b8e6982036873e",
-    "url": "/fonts/fontawesome-webfont.af7ae505.woff2"
+    "revision": "0b8a30b10cbe7708d5f3a4b007c1d665",
+    "url": "/img/nucleo-icons.0b8a30b1.svg"
   },
   {
     "revision": "674f50d287a8c48dc19ba404d20fe713",
     "url": "/fonts/fontawesome-webfont.674f50d2.eot"
+  },
+  {
+    "revision": "af7ae505a9eed503f8b8e6982036873e",
+    "url": "/fonts/fontawesome-webfont.af7ae505.woff2"
   },
   {
     "revision": "fee66e712a8a08eef5805a46892932ad",
@@ -76,7 +76,7 @@ self.__precacheManifest = [
     "url": "/img/fontawesome-webfont.912ec66d.svg"
   },
   {
-    "revision": "cedf44997592cdfbdd0ac4d1807bb385",
+    "revision": "dcc98db5624b1b60f7dafbdd80239df2",
     "url": "/index.html"
   }
 ];
