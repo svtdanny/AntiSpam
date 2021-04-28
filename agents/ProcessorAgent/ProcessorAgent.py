@@ -75,8 +75,17 @@ class SpamEvaluator(Resource):
 
         email_addr = data['email']
         letter = data['letter']
+        
 
-       
+        res = requests.post('http://api.antispam-msu.site/rest-auth/login/', 
+                data={'username':'antispam', 'password':'spammustdie'})
+        key = res.json()['key']
+
+        res = requests.get('http://api.antispam-msu.site/profile/sys_mail_lists/',
+                headers={'Authorization': 'Token ' + key}, 
+                data={'username': email_addr})
+        mail_lists = res.json()
+
         if (len(letter) != 0):
             cl = Classificator(email_addr)
             prep_text = Classificator.prepare_data([letter])[0]
@@ -84,6 +93,27 @@ class SpamEvaluator(Resource):
         else:
             result, score = "NO", 0
 
+        try:
+            res = requests.post('http://api.antispam-msu.site/rest-auth/login/', 
+                    data={'username':'antispam', 'password':'spammustdie'})
+            key = res.json()['key']
+
+            res = requests.get('http://api.antispam-msu.site/profile/sys_mail_lists/',
+                    headers={'Authorization': 'Token ' + key}, 
+                    data={'username': email_addr})
+            mail_lists = res.json()
+
+
+            for bl in mail_lists['blackList'].split(','):
+                if bl in letter:
+                    result, score = "YES", 1
+                    print('SYS: BL LIST USED')
+            for wh in mail_lists['whiteList'].split(','):
+                if wh in letter:
+                    result, score = "NO", 0
+                    print('SYS: WH LIST USED')
+        except:
+            print('SYS: FAILED to load b&w lists')
 
         # code if you need to return letter with headers
         #msg = Classificator.json_to_dict(', '.join(letter))

@@ -1,1 +1,1 @@
-{"email": "isd", "letter": "asd"}
+{"email": "isd", "letter": "From wh@ya.ru Wed Apr 28 18:41:14 2021 Return-Path: <wh@ya.ru> Received: from localhost (localhost [127.0.0.1]) by jaffar.cs.msu.su (8.13.8/8.13.8) with SMTP id 13SFeZ9I010680 for isd"}

@@ -17,6 +17,8 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 import pymorphy2
 
+import json
+
 nltk.download('stopwords')
 
 class Classificator():
@@ -116,7 +118,7 @@ class Classificator():
             for part in msg.walk():
                 ctype = part.get_content_type()
                 cdispo = str(part.get('Content-Disposition'))
-
+                
                 # Пропустить любые text/plain (txt) вложения
                 if ctype == 'text/plain' and 'attachment' not in cdispo:
                     if body_len < len(part.get_payload(decode=True)):
@@ -126,7 +128,7 @@ class Classificator():
             # может быть только вложение
         else:
             body = msg.get_payload(decode=True)
-        
+            
         if body is not None:
             return body.decode('utf-8','ignore')
         else:
@@ -144,6 +146,7 @@ class Classificator():
             decoded_msg = email.message_from_string(msg, _class = email.message.EmailMessage)
 
             texts.append(Classificator.process_email(decoded_msg))
+     
         return texts
 
     @staticmethod
