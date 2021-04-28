@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_meets_djongo import serializers as djongo_serializers
-from .models import LearningSettings, ClassSettings, MailLists
+from .models import LearningSettings, ClassSettings, MailLists, LastLearn
 from django.contrib.auth.models import User
 
 
@@ -31,4 +31,11 @@ class MailListsSerializer(djongo_serializers.DjongoModelSerializer):
     class Meta:
         model = MailLists
         fields = ('whiteList', 'blackList', 'creator')
+
+class LastLearnSerializer(djongo_serializers.DjongoModelSerializer):  
+    creator = serializers.ReadOnlyField(source='creator.username')
+
+    class Meta:
+        model = LastLearn
+        fields = ('lastLearn', 'totalTime', 'VolumeInbox', 'VolumeSpam', 'creator')
    

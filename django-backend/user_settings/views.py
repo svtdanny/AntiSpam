@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
-from .models import LearningSettings, ClassSettings, MailLists
+from .models import LearningSettings, ClassSettings, MailLists, LastLearn
 from .permissions import IsOwner, IsAuthenticated, AdminAuthenticationPermission
-from .serializers import LearningSettingsSerializer, ClassSettingsSerializer, MailListsSerializer
+from .serializers import LearningSettingsSerializer, ClassSettingsSerializer, MailListsSerializer, LastLearnSerializer
 from django.contrib.auth.models import User
 
 
@@ -148,3 +148,35 @@ class _sys_get_mail_lists(ListCreateAPIView):
         serializer = self.serializer_class(lists)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class post_last_learn(ListCreateAPIView):
+    serializer_class = LastLearnSerializer
+    permission_classes = (IsAuthenticated, AdminAuthenticationPermission,)
+
+    def put(self, request):
+        username = request.data["username"]
+        print('!!!', username)
+        user = User.objects.get(username=username)
+
+        try:
+            settings = LastLearn.objects.get(creator=user)
+        except LastLearn.DoesNotExist:
+            settings = LastLearn(creator=user)
+
+        serializer = self.serializer_class(settings, data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class get_last_learn(ListCreateAPIView):
+    serializer_class = LastLearnSerializer
+    permission_classes = (IsAuthenticated, IsOwner)
+
+    def get(self, request):
+        lists = LastLearn.objects.get(creator=request.user)
+        
+        serializer = self.serializer_class(lists)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
