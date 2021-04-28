@@ -4,11 +4,12 @@ from flask_restful import Api, Resource
 import email
 from urllib.parse import urlparse, parse_qsl
 
+import requests
 
 from Classificator import Classificator
 
 import json
-
+from datetime import datetime 
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,6 +26,8 @@ class FitModel(Resource):
         email = data['email']
         inbox = data['inbox']
         spam = data['spam']
+        
+        start_time = datetime.now() 
 
         inbox_prep = Classificator.prepare_data(inbox)
         spam_prep = Classificator.prepare_data(spam)
@@ -38,6 +41,25 @@ class FitModel(Resource):
         cl = Classificator(email)
         cl.fit(X, y)
 
+        end_time = datetime.now() 
+        delta = end_time - start_time
+        delta = str(delta).split(':')[-1]
+        s_ms = delta.split('.')
+        delta = s_ms[0] + '.' + s_ms[1][:3] 
+
+        res = requests.post('http://api.antispam-msu.site/rest-auth/login/', data={'username':'antispam', 'password':'spammustdie'})
+        key = res.json()['key']
+
+        data = {'username': email,
+                'lastLearn': end_time.strftime("%b %d %Y %H:%M:%S"), 
+                'totalTime': delta, 
+                'VolumeInbox': len(y_inbox), 
+                'VolumeSpam': len(y_spam)}
+        
+        res = requests.put('http://api.antispam-msu.site/profile/sys_last_learn/',
+                headers={'Authorization': 'Token ' + key}, 
+                data=data)
+        
         return jsonify({})
 
 class SpamEvaluator(Resource):

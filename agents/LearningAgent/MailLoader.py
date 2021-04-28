@@ -84,8 +84,11 @@ class ImapConnector:
         readed_letters = []
         for post_id in post_ids:
             status, letter = self.imap.fetch(post_id, '(RFC822)')
+            
+            #Если кодировка сразу нормальная, то следующая строка не нужна
+            decoded_letter = letter[0][1].decode('utf-8', errors='ignore')
 
-            readed_letters.append(letter[0][1])
+            readed_letters.append(decoded_letter)
 
         if self.save_file != None:
             self.save_to_file(readed_letters)
@@ -108,7 +111,7 @@ class ImapConnector:
 # Module testing
 # Not for production using
 if __name__ == '__main__':
-    c = ImapConnector('jaffar.cs.msu.su:993', save_file='loaded_letters.txt')
+    c = ImapConnector('jaffar.cs.msu.su', save_file='loaded_letters.txt')
     c.connect('isd', password=None)
     c.read_folder('INBOX', 5)
 
