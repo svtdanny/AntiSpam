@@ -43,8 +43,8 @@ export default {
                 data: {
                     email: this.$store.getters.username,
                     password: this.password,
-                    inbox_volume: 10,
-                    spam_volume: 10
+                    inbox_volume: 50,
+                    spam_volume: 50
                 },
                 })
                 .then((response) => {
