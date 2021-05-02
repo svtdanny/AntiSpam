@@ -18,7 +18,7 @@
 
 <script>
 import axios from "axios";
-import {LEARN_URL} from "../../axios-api.js";
+import {LEARN_URL, API_URL} from "../../axios-api.js";
 
 export default {
     data () {
@@ -26,8 +26,30 @@ export default {
         password: "",
         logs: "",
         incorrectPOST: false,
+
+        VolumeSpam: "",
+        VolumeInbox: "",
+        UsePredefinedModel: true,
       }
     },
+
+    created() {
+    axios({
+      method: "GET",
+      url: API_URL + "/profile/learning_sets/",
+      headers: {
+        Authorization: `Token ${this.$store.state.accessToken}`,
+      },
+    })
+      .then((response) => {
+        this.VolumeInbox = response.data.VolumeInbox;
+        this.VolumeSpam = response.data.VolumeSpam;
+        this.UsePredefinedModel = response.data.UsePredefinedModel;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
 
     methods: {
         trainNew (password) {
@@ -43,8 +65,8 @@ export default {
                 data: {
                     email: this.$store.getters.username,
                     password: this.password,
-                    inbox_volume: 50,
-                    spam_volume: 50
+                    inbox_volume: parseInt(this.VolumeInbox),
+                    spam_volume: parseInt(this.VolumeSpam)
                 },
                 })
                 .then((response) => {

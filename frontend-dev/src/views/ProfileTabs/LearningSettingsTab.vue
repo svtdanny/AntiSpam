@@ -1,9 +1,9 @@
 <template>
   <div class="col">
     <div class="row mt-3">
-      <p class="h6">Use predifined model:</p>
+      <p class="h6" v-if="false">Use predifined model:</p>
 
-      <base-checkbox v-model="UsePredefinedModel">
+      <base-checkbox v-model="UsePredefinedModel" v-if="false">
         <p></p>
       </base-checkbox>
     </div>
@@ -12,14 +12,14 @@
         <p class="h6">Train max volume Inbox:</p>
       </div>
       <div class="row">
-        <base-input value='sd' v-model="VolumeInbox"> </base-input>
+        <base-input  v-model="VolumeInbox"> </base-input>
       </div>
 
       <div class="row">
         <p class="h6">Train max volume Spam:</p>
       </div>
       <div class="row">
-        <base-input placeholder="this.VolumeSpam" v-model="VolumeSpam"> </base-input>
+        <base-input v-model="VolumeSpam"> </base-input>
       </div>
 
       <div class="row">

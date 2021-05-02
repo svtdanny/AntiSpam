@@ -11,7 +11,7 @@
                 <LearningTab></LearningTab>
               </tab-pane>
 
-              <tab-pane key="tab2" v-if="false">
+              <tab-pane key="tab2">
                 <template slot="title"> Learning settings </template>
 
                 <LearningSettingsTab></LearningSettingsTab>
