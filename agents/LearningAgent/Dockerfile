@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Setup files
 COPY ./configs ./configs
-RUN ln -s /agent/configs/ProcessorAgent.conf /etc/nginx/sites-enabled/ProcessorAgent.conf && \
-    ln -s /agent/configs/ProcessorAgent.service /etc/systemd/system/ProcessorAgent.service
+RUN ln -s /agent/configs/LearningAgent.conf /etc/nginx/sites-enabled/LearningAgent.conf && \
+    ln -s /agent/configs/LearningAgent.service /etc/systemd/system/LearningAgent.service
 
 COPY *.py /agent/
 
